@@ -7,6 +7,7 @@ import { getServices } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { EmptyState } from '@/components/EmptyState';
 import { CheckCircle2 } from 'lucide-react';
 
 interface Service {
@@ -78,9 +79,14 @@ export default function ServicesPage() {
             ))}
           </div>
         ) : services.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No services available at the moment.</p>
-          </div>
+          <EmptyState
+            title="No services available"
+            description="Check back soon for our latest logistics solutions, or contact us for custom shipping needs."
+            action={{
+              label: 'Contact Us',
+              href: '/client/contact',
+            }}
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service) => (

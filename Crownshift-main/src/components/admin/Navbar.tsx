@@ -1,11 +1,11 @@
 "use client";
 
-import { useAuth } from "@/lib/context/AuthContext";
+import { useAuth } from "@/hooks/use-auth";
 import { Search, Bell, User, LogOut, Settings } from "lucide-react";
 import { logoutAction } from "@/app/actions";
 
 export default function AdminNavbar() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   const handleLogout = async () => {
     await logoutAction();

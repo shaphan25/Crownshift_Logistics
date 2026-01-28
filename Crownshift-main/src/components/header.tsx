@@ -11,13 +11,13 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import Logo from "./logo";
-import { useAuth } from '@/lib/context/AuthContext';
+import { useAuth } from '@/hooks/use-auth';
 import { initializeFirebase } from '@/firebase';
 import { useState } from 'react';
 
 export default function Header() {
   const sheetId = React.useId();
-  const { user, loading } = useAuth();
+  const { user, isLoading: loading } = useAuth();
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   const unauthLinks = [

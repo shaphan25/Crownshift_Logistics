@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Protected routes that require authentication
-const protectedRoutes = ['/admin'];
+// Protected routes and their required roles
+const protectedRoutes: Record<string, string[]> = {
+  '/admin': ['admin'],
+  '/client': ['client'],
+};
 
 // Routes that should not have middleware applied
 const excludedPaths = [
@@ -15,6 +18,7 @@ const excludedPaths = [
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const url = request.nextUrl;
 
   // Skip middleware for excluded paths
   if (excludedPaths.some(path => pathname.startsWith(path))) {
@@ -22,18 +26,25 @@ export function middleware(request: NextRequest) {
   }
 
   // Check if the current route is protected
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  const matchedRoute = Object.keys(protectedRoutes).find(route =>
+    pathname.startsWith(route)
+  );
 
-  if (isProtectedRoute) {
-    // Check for session token in cookies (__session is used by Firebase Admin SDK verification)
-    const sessionToken = request.cookies.get('__session');
+  if (matchedRoute) {
+    // Get roles from cookie (array format: ["client","admin"])
+    const rolesString = request.cookies.get('roles')?.value;
+    const roles: string[] = rolesString ? JSON.parse(rolesString) : [];
 
-    if (!sessionToken) {
-      // Redirect to login with callback URL
-      const callbackUrl = encodeURIComponent(pathname + request.nextUrl.search);
-      return NextResponse.redirect(
-        new URL(`/login?callbackUrl=${callbackUrl}`, request.url)
-      );
+    // Get required roles for this route
+    const requiredRoles = protectedRoutes[matchedRoute];
+
+    // Check if user has required role
+    const hasRequiredRole = requiredRoles.some(role => roles.includes(role));
+
+    if (!hasRequiredRole) {
+      // Redirect to unauthorized if no matching role
+      url.pathname = '/unauthorized';
+      return NextResponse.redirect(url);
     }
   }
 

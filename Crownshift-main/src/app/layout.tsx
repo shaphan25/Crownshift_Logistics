@@ -3,12 +3,28 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { FirebaseClientProvider } from "@/firebase/client-provider";
-import { AuthProvider } from '@/lib/context/AuthContext';
-import RootLayoutClient from "@/components/root-layout-client";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import PromoBanner from "@/components/PromoBanner";
+import { SEO_CONFIG } from "@/config/seo";
 
 export const metadata: Metadata = {
-  title: "Crownshift Logistics LTD",
-  description: "Reliable and efficient logistics solutions for your business.",
+  title: SEO_CONFIG.defaultTitle,
+  description: SEO_CONFIG.defaultDescription,
+  keywords: SEO_CONFIG.defaultKeywords,
+  openGraph: {
+    title: SEO_CONFIG.defaultTitle,
+    description: SEO_CONFIG.defaultDescription,
+    type: SEO_CONFIG.openGraph.type as any,
+    url: SEO_CONFIG.openGraph.url,
+    siteName: SEO_CONFIG.openGraph.siteName,
+    images: SEO_CONFIG.openGraph.images,
+  },
+  twitter: {
+    card: SEO_CONFIG.twitter.card as any,
+    site: SEO_CONFIG.twitter.site,
+    creator: SEO_CONFIG.twitter.creator,
+  },
 };
 
 export default function RootLayout({
@@ -25,12 +41,15 @@ export default function RootLayout({
       </head>
       <body className="font-body bg-background text-foreground antialiased">
         <FirebaseClientProvider>
-          <AuthProvider>
-            <RootLayoutClient>
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <PromoBanner promos={[]} />
+            <main className="flex-1">
               {children}
-            </RootLayoutClient>
+            </main>
+            <Footer />
             <Toaster />
-          </AuthProvider>
+          </div>
         </FirebaseClientProvider>
       </body>
     </html>

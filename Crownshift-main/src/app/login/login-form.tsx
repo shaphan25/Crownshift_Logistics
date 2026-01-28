@@ -63,6 +63,20 @@ export default function LoginForm() {
     );
   }
 
+  const setRolesCookie = async (roles: string[]) => {
+    try {
+      const response = await fetch('/api/auth/set-roles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ roles }),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Failed to set roles cookie:', error);
+      return false;
+    }
+  };
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -102,6 +116,11 @@ export default function LoginForm() {
           console.warn('Error creating user profile:', profileErr);
         }
       }
+      
+      // Set roles cookie based on selected role
+      const roles = [isAdminLogin ? 'admin' : role]; // e.g., ['client'] or ['admin']
+      await setRolesCookie(roles);
+
       // Redirect after successful auth
       router.replace(callbackUrl);
     } catch (error) {
@@ -142,6 +161,9 @@ export default function LoginForm() {
       } catch (err) {
         console.warn('Failed to create user profile:', err);
       }
+
+      // Set roles cookie (Google users default to 'client')
+      await setRolesCookie(['client']);
       
       router.replace(callbackUrl);
     } catch (error) {
