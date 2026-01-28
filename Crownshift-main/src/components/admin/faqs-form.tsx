@@ -34,7 +34,7 @@ export default function FAQForm() {
     const fetchFAQs = async () => {
       try {
         const result = await getFAQs();
-        if (result.success) {
+        if (result.success && result.data) {
           setFAQs(result.data);
         } else {
           toast({
@@ -82,7 +82,7 @@ export default function FAQForm() {
 
         // Refresh FAQs
         const refreshResult = await getFAQs();
-        if (refreshResult.success) {
+        if (refreshResult.success && refreshResult.data) {
           setFAQs(refreshResult.data);
         }
       } else {
@@ -115,7 +115,7 @@ export default function FAQForm() {
 
         // Refresh FAQs
         const refreshResult = await getFAQs();
-        if (refreshResult.success) {
+        if (refreshResult.success && refreshResult.data) {
           setFAQs(refreshResult.data);
         }
       } else {
@@ -147,7 +147,7 @@ export default function FAQForm() {
 
         // Refresh FAQs
         const refreshResult = await getFAQs();
-        if (refreshResult.success) {
+        if (refreshResult.success && refreshResult.data) {
           setFAQs(refreshResult.data);
         }
       } else {

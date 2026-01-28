@@ -4,8 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { FirebaseClientProvider } from "@/firebase/client-provider";
 import { AuthProvider } from '@/lib/context/AuthContext';
-import Header from "@/components/header";
-import Footer from "@/components/footer";
+import RootLayoutClient from "@/components/root-layout-client";
 
 export const metadata: Metadata = {
   title: "Crownshift Logistics LTD",
@@ -27,18 +26,13 @@ export default function RootLayout({
       <body className="font-body bg-background text-foreground antialiased">
         <FirebaseClientProvider>
           <AuthProvider>
-            <div className="flex flex-col min-h-[100dvh]">
-              <Header />
-              <main className="flex-1">
-                {children}
-              </main>
-              <Footer />
-            </div>
+            <RootLayoutClient>
+              {children}
+            </RootLayoutClient>
+            <Toaster />
           </AuthProvider>
         </FirebaseClientProvider>
-        <Toaster />
       </body>
     </html>
   );
 }
-
